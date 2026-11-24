@@ -1,0 +1,26 @@
+{
+  "id": "./minha_escala_12x36-1.html",
+  "name": "Minha Escala 12x36",
+  "short_name": "Minha Escala",
+  "description": "Calendário pessoal de plantões e folgas na escala 12x36.",
+  "start_url": "./minha_escala_12x36-1.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#070b13",
+  "theme_color": "#070b13",
+  "icons": [
+    {
+      "src": "./escala-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./escala-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

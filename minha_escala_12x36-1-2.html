@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070b13">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Minha Escala">
+<link rel="manifest" href="./manifest-escala.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./escala-icon-192.png">
+<meta name="description" content="Calendário pessoal da escala 12x36: plantões, folgas e planejamento de longo prazo.">
+<title>Minha Escala 12x36</title>
+<style>
+
+:root{--bg:#070b13;--panel:rgba(15,24,39,.88);--panel2:#111d30;--text:#edf5ff;--muted:#8fa3bd;--line:rgba(112,150,194,.22);--green:#35e0b0;--greenbg:#103a35;--red:#ff6e83;--redbg:#40212d;--blue:#4dd8ff;--gold:#f6c96b;--violet:#8b82ff}
+*{box-sizing:border-box}
+body{margin:0;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;background-color:var(--bg);background-image:linear-gradient(rgba(57,111,159,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(57,111,159,.055) 1px,transparent 1px),radial-gradient(ellipse at 15% -10%,rgba(27,131,190,.22),transparent 42%),radial-gradient(ellipse at 100% 20%,rgba(83,75,190,.16),transparent 36%);background-size:32px 32px,32px 32px,auto,auto}
+.wrap{max-width:780px;margin:auto;padding:24px 17px 46px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px;padding:5px 2px 17px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:13px}
+.logo{width:48px;height:48px;border-radius:14px;background:linear-gradient(145deg,#0e9ec9,#5552d9);display:grid;place-items:center;font-size:23px;box-shadow:0 0 28px rgba(42,190,255,.24),inset 0 1px 0 #ffffff55;border:1px solid #75dfff66}
+.eyebrow{color:var(--blue);font-size:10px;font-weight:850;letter-spacing:2px;text-transform:uppercase}
+.brand h1{font-size:21px;line-height:1.12;margin:4px 0 0;letter-spacing:-.55px}
+.pill{border:1px solid rgba(77,216,255,.27);color:#a9d9ed;background:rgba(18,57,78,.35);border-radius:8px;padding:8px 10px;font-size:10px;letter-spacing:.5px;font-weight:750;white-space:nowrap}
+.card{background:linear-gradient(145deg,rgba(18,30,49,.94),rgba(10,17,29,.91));border:1px solid var(--line);border-radius:18px;padding:19px;margin:14px 0;box-shadow:0 16px 45px #0004,inset 0 1px 0 rgba(255,255,255,.035);backdrop-filter:blur(16px);position:relative;overflow:hidden}
+.card:before{content:"";position:absolute;left:0;top:0;width:64px;height:1px;background:linear-gradient(90deg,var(--blue),transparent)}
+.setup h2,.card h2{font-size:15px;margin:0 0 6px;letter-spacing:.2px}
+.sub{color:var(--muted);font-size:12px;line-height:1.6;margin:0 0 16px}
+label{display:block;color:#b9cbe0;font-size:11px;font-weight:800;letter-spacing:.4px;margin:0 0 8px}
+input,button{font:inherit}
+input[type=date]{width:100%;background:#080f1b;color:var(--text);border:1px solid #30465f;border-radius:10px;padding:13px 12px;min-height:48px;color-scheme:dark;outline:none}
+input[type=date]:focus{border-color:var(--blue);box-shadow:0 0 0 3px #4dd8ff18}
+.setup-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
+.btn{border-radius:10px;padding:13px 16px;font-weight:800;cursor:pointer;min-height:46px;transition:transform .16s ease,border-color .16s ease,filter .16s ease}
+.btn:active{transform:scale(.97)}
+.primary{border:1px solid #66dfff88;background:linear-gradient(120deg,#087fa8,#4c54c8);color:white;box-shadow:0 7px 22px #087fa833}
+.secondary{background:linear-gradient(145deg,#182941,#111d30);color:#d8eaff;border:1px solid #3b536f}
+.danger{background:#2a1824;color:#ffabb9;border:1px solid #65374a}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.stat{background:linear-gradient(145deg,rgba(8,18,31,.96),rgba(15,27,44,.9));border:1px solid var(--line);border-radius:13px;padding:15px;position:relative;overflow:hidden}
+.stat:after{content:"";position:absolute;right:-22px;top:-27px;width:80px;height:80px;border-radius:50%;background:rgba(77,216,255,.055);filter:blur(2px)}
+.stat .k{font-size:9px;color:#9db3cd;font-weight:850;letter-spacing:1.35px}
+.stat .v{font-size:24px;font-weight:850;margin-top:7px;letter-spacing:-.7px;font-variant-numeric:tabular-nums}
+.stat .hint{font-size:10px;color:var(--muted);margin-top:4px}
+.green{color:var(--green)}.red{color:var(--red)}.blue{color:var(--blue)}
+.cal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}
+.month-title{font-size:21px;font-weight:850;text-transform:capitalize;letter-spacing:-.6px}
+.nav{display:flex;gap:6px}
+.nav button{width:40px;height:40px;padding:0;font-size:19px}
+.week,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.week div{text-align:center;color:#7890ac;font-size:9px;font-weight:850;letter-spacing:.8px;padding:5px 0 8px}
+.day{min-height:66px;border-radius:10px;background:rgba(7,15,26,.78);border:1px solid rgba(91,123,160,.2);padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;cursor:pointer;position:relative;color:var(--text);transition:transform .15s,border-color .15s,background .15s}
+.day:active{transform:scale(.96)}
+.day .num{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+.day .tag{font-size:8px;font-weight:900;letter-spacing:.55px}
+.day.work{background:linear-gradient(145deg,rgba(93,36,57,.72),rgba(42,23,39,.88));border-color:rgba(255,110,131,.36)}
+.day.work .tag{color:#ff8c9c}
+.day.off{background:linear-gradient(145deg,rgba(13,72,67,.72),rgba(10,39,43,.9));border-color:rgba(53,224,176,.34)}
+.day.off .tag{color:#5ce7bd}
+.day.today{outline:2px solid var(--gold);outline-offset:1px;box-shadow:0 0 18px #f6c96b22}
+.day.selected{box-shadow:inset 0 0 0 1px var(--blue),0 0 16px #4dd8ff20}
+.day.other{opacity:.28}
+.day.empty{background:transparent;border:0;cursor:default}
+.day .dot{width:5px;height:5px;border-radius:50%;background:var(--gold);position:absolute;top:5px;right:6px;box-shadow:0 0 7px var(--gold)}
+.legend{display:flex;gap:15px;flex-wrap:wrap;margin-top:15px;color:var(--muted);font-size:10px}
+.legend span{display:flex;align-items:center;gap:7px}
+.swatch{width:8px;height:8px;border-radius:2px;box-shadow:0 0 8px currentColor}
+.tip{font-size:11px;color:#8196b1;line-height:1.55;margin:12px 2px 0}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.actions button{flex:1}
+.selected-info{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(6,15,27,.85);border:1px solid var(--line);border-radius:11px;padding:13px;margin-top:13px}
+.selected-info strong{font-size:12px}
+.selected-info small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+.footer{text-align:center;color:#627993;font-size:10px;letter-spacing:.4px;padding:16px 8px}
+.hide{display:none!important}
+@media(max-width:390px){.wrap{padding:17px 11px 32px}.card{padding:15px}.day{min-height:58px}.day .num{font-size:13px}.day .tag{font-size:7px}.brand h1{font-size:18px}.pill{font-size:9px;padding:7px}.month-title{font-size:19px}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><div class="logo">🗓️</div><div><div class="eyebrow">Seu calendário pessoal</div><h1>Minha Escala 12x36</h1></div></div>
+    <div class="pill">100% no seu celular</div>
+  </header>
+
+  <section class="card setup">
+    <h2>Configure sua escala</h2>
+    <p class="sub">Escolha um dia em que você trabalha. A partir dele, o calendário alterna automaticamente: um dia de plantão e um dia de folga.</p>
+    <div class="setup-row">
+      <div><label for="anchor">Uma data em que você trabalha</label><input id="anchor" type="date"></div>
+      <button class="btn primary" id="saveAnchor">Salvar escala</button>
+    </div>
+    <p class="tip" id="setupStatus">Depois de salvar, os meses serão calculados automaticamente.</p>
+  </section>
+
+  <section class="card">
+    <div class="stats">
+      <div class="stat"><div class="k">PRÓXIMO PLANTÃO</div><div class="v red" id="nextWork">—</div><div class="hint" id="nextWorkHint">Configure sua escala</div></div>
+      <div class="stat"><div class="k">PRÓXIMA FOLGA</div><div class="v green" id="nextOff">—</div><div class="hint" id="nextOffHint">Configure sua escala</div></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="cal-head">
+      <div><div class="eyebrow">Visualização mensal</div><div class="month-title" id="monthTitle">—</div></div>
+      <div class="nav"><button class="btn secondary" id="prev" aria-label="Mês anterior">‹</button><button class="btn secondary" id="todayBtn" aria-label="Ir para hoje">Hoje</button><button class="btn secondary" id="next" aria-label="Próximo mês">›</button></div>
+    </div>
+    <div class="week"><div>DOM</div><div>SEG</div><div>TER</div><div>QUA</div><div>QUI</div><div>SEX</div><div>SÁB</div></div>
+    <div class="days" id="days"></div>
+    <div class="legend"><span><i class="swatch" style="background:#ff6b78"></i> Plantão</span><span><i class="swatch" style="background:#31c48d"></i> Folga</span><span><i class="swatch" style="background:#ffd166"></i> Hoje</span></div>
+    <p class="tip">Toque em um dia para ver os detalhes. Se houver troca de plantão, você pode marcar uma exceção manualmente.</p>
+    <div class="selected-info" id="selectedInfo"><div><strong>Selecione um dia do calendário</strong><small>Os detalhes aparecerão aqui.</small></div></div>
+  </section>
+
+  <section class="card">
+    <h2>Ajustes rápidos</h2>
+    <p class="sub">Use estas opções se sua escala mudar em algum dia específico.</p>
+    <div class="actions">
+      <button class="btn secondary" id="toggleException" disabled>Alternar plantão / folga</button>
+      <button class="btn danger" id="clearExceptions">Limpar alterações</button>
+    </div>
+    <p class="tip" id="exceptionStatus">As alterações manuais ficam salvas somente neste aparelho.</p>
+  </section>
+  <div class="footer">Minha Escala 12x36 • Seus dados ficam salvos neste aparelho</div>
+</div>
+<script>
+(function(){
+ const $=id=>document.getElementById(id);
+ const today=new Date(); today.setHours(0,0,0,0);
+ const iso=d=>{const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`};
+ const parse=s=>{if(!s)return null;const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+ const diffDays=(a,b)=>Math.round((Date.UTC(a.getFullYear(),a.getMonth(),a.getDate())-Date.UTC(b.getFullYear(),b.getMonth(),b.getDate()))/86400000);
+ const fmt=(d,opts={day:'2-digit',month:'long',year:'numeric'})=>d.toLocaleDateString('pt-BR',opts);
+ const key='minhaEscala1236_v1';
+ let saved={anchor:'',exceptions:{}};
+ try{saved=Object.assign(saved,JSON.parse(localStorage.getItem(key)||'{}'));}catch(e){}
+ let view=new Date(today.getFullYear(),today.getMonth(),1), selected=null;
+ $('anchor').value=saved.anchor||'';
+ function persist(){localStorage.setItem(key,JSON.stringify(saved));}
+ function baseType(d){if(!saved.anchor)return null;return Math.abs(diffDays(d,parse(saved.anchor)))%2===0?'work':'off'}
+ function type(d){const k=iso(d);return saved.exceptions&&saved.exceptions[k] ? saved.exceptions[k] : baseType(d)}
+ function dayName(d){return fmt(d,{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
+ function relative(d){const n=diffDays(d,today);if(n===0)return 'Hoje';if(n===1)return 'Amanhã';if(n===-1)return 'Ontem';return n>0?`Daqui a ${n} dias`:`Há ${Math.abs(n)} dias`}
+ function findNext(t){for(let i=0;i<740;i++){const d=new Date(today);d.setDate(today.getDate()+i);if(type(d)===t)return d;}return null}
+ function updateStats(){
+   const w=findNext('work'),o=findNext('off');
+   $('nextWork').textContent=w?fmt(w,{day:'2-digit',month:'short'}):'—';
+   $('nextWorkHint').textContent=w?relative(w):'Configure sua escala';
+   $('nextOff').textContent=o?fmt(o,{day:'2-digit',month:'short'}):'—';
+   $('nextOffHint').textContent=o?relative(o):'Configure sua escala';
+ }
+ function render(){
+   $('monthTitle').textContent=view.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+   const first=new Date(view.getFullYear(),view.getMonth(),1), count=new Date(view.getFullYear(),view.getMonth()+1,0).getDate();
+   const holder=$('days');holder.innerHTML='';
+   for(let i=0;i<first.getDay();i++){const e=document.createElement('div');e.className='day empty';holder.appendChild(e);}
+   for(let n=1;n<=count;n++){
+     const d=new Date(view.getFullYear(),view.getMonth(),n),t=type(d),el=document.createElement('button');
+     el.type='button';el.className='day '+(t||'')+(iso(d)===iso(today)?' today':'')+(selected&&iso(d)===iso(selected)?' selected':'');
+     const altered=!!(saved.exceptions&&saved.exceptions[iso(d)]);
+     el.innerHTML=`<span class="num">${n}</span><span class="tag">${t==='work'?'PLANTÃO':t==='off'?'FOLGA':'—'}</span>${altered?'<i class="dot" title="Alteração manual"></i>':''}`;
+     el.addEventListener('click',()=>{selected=d;showSelected();render();});
+     holder.appendChild(el);
+   }
+   updateStats();showSelected();
+ }
+ function showSelected(){
+   const info=$('selectedInfo'),btn=$('toggleException');
+   if(!selected){info.innerHTML='<div><strong>Selecione um dia do calendário</strong><small>Os detalhes aparecerão aqui.</small></div>';btn.disabled=true;return;}
+   const t=type(selected),isManual=!!(saved.exceptions&&saved.exceptions[iso(selected)]);
+   info.innerHTML=`<div><strong>${dayName(selected)}</strong><small>${t==='work'?'Dia de plantão':t==='off'?'Dia de folga':'Defina uma data de trabalho para calcular'}${isManual?' • Alteração manual':''} · ${relative(selected)}</small></div><strong class="${t==='work'?'red':'green'}">${t==='work'?'PLANTÃO':t==='off'?'FOLGA':'—'}</strong>`;
+   btn.disabled=!saved.anchor;
+   btn.textContent=isManual?'Restaurar escala original':'Alternar plantão / folga';
+ }
+ $('saveAnchor').addEventListener('click',()=>{
+   if(!$('anchor').value){$('setupStatus').textContent='Escolha uma data em que você trabalha.';return;}
+   saved.anchor=$('anchor').value;saved.exceptions={};persist();$('setupStatus').textContent='Escala salva! Todos os meses foram calculados.';render();
+ });
+ $('prev').onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()-1,1);render()};
+ $('next').onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()+1,1);render()};
+ $('todayBtn').onclick=()=>{view=new Date(today.getFullYear(),today.getMonth(),1);selected=today;render()};
+ $('toggleException').onclick=()=>{
+   if(!selected||!saved.anchor)return;
+   const k=iso(selected),current=type(selected);
+   if(saved.exceptions[k])delete saved.exceptions[k];else saved.exceptions[k]=current==='work'?'off':'work';
+   persist();render();
+   $('exceptionStatus').textContent='Alteração salva para '+fmt(selected,{day:'2-digit',month:'long',year:'numeric'})+'.';
+ };
+ $('clearExceptions').onclick=()=>{
+   if(!Object.keys(saved.exceptions||{}).length){$('exceptionStatus').textContent='Não há alterações manuais para limpar.';return;}
+   if(confirm('Apagar todas as alterações manuais e voltar à escala automática?')){saved.exceptions={};persist();render();$('exceptionStatus').textContent='Todas as alterações manuais foram removidas.';}
+ };
+ if(saved.anchor){$('setupStatus').textContent='Sua escala está configurada. Você pode mudar a data de referência quando precisar.';selected=today;}
+ else {$('setupStatus').textContent='Escolha uma data em que você trabalha para começar.';}
+ render();
+})();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./escala-sw.js').catch(() => {});
+  });
+}
+</script>
+
+</body>
+</html>
