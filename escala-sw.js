@@ -1,38 +1,40 @@
 
-const CACHE = 'minha-escala-v1';
+const CACHE = 'minha-escala-12x36-v2';
+
+const FILES = [
+  './minha_escala_12x36-1-2.html',
+  './manifest-escala.webmanifest',
+  './escala-icon-192-1.png',
+  './escala-icon-512-2.png'
+];
 
 self.addEventListener('install', event => {
-  self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE).then(cache =>
-      cache.addAll([
-        './minha_escala_12x36-1.html',
-        './manifest-escala.webmanifest',
-        './escala-icon-192.png',
-        './escala-icon-512.png'
-      ])
-    )
+    caches.open(CACHE).then(cache => cache.addAll(FILES))
   );
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
-        keys.filter(k => k !== CACHE)
-          .map(k => caches.delete(k))
+        keys
+          .filter(key =>
+            key.startsWith('minha-escala-') && key !== CACHE
+          )
+          .map(key => caches.delete(key))
       )
-    )
+    ).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
   event.respondWith(
-    caches.match(event.request).then(cached =>
-      cached || fetch(event.request)
-    )
+    caches.match(event.request).then(cached => {
+      return cached || fetch(event.request);
+    })
   );
 });
